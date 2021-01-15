@@ -236,8 +236,12 @@ vector<string> split_line(const string& str, const char& ch) {
 void ReadFromFile() {
     ifstream file("ToDoList.txt");
 
-    file.seekg(0, ios::end);   //Controllo se il file è vuoto o meno
-    if (file.tellg() != 0) {
+    if (file.fail()) {
+        cout << "Unable to open the file!!" << endl;
+    } else if (file.eof()) {
+        cout << "File is empty" << endl;
+        cout << "Note that program will halt" << endl; // error prompt
+    } else {
         string input;//, item;
         while (getline(file, input)) {       // prelevo dal file una riga alla volta per poterla elaborare
             vector<string> ToDoItems = split_line(input, ' '); //divido la riga in ogni singola parola che la compone
