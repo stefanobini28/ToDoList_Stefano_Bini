@@ -34,24 +34,6 @@ int InputChoice(const std::string& action) {
     return choice;
 }
 
-int menu() {
-    string action;
-    int actionCase;
-    cout << "\t Welcome to the ToDo List\n" << endl;
-    std::cout<<""<<std::endl;
-    std::cout<<"Digit  'list'   to see the complete list of Todo things"<<std::endl;
-    std::cout<<"Digit  'add'    to insert a new event"<<std::endl;
-    std::cout<<"Digit 'remove'  to remove an event from the list"<<std::endl;
-    std::cout<<"Digit 'check'   to indicate as 'done/undone' a list event "<<std::endl;
-    std::cout<<"Digit  'exit'   to end the program"<<std::endl;
-    std::cin>>action;
-    transform(action.begin(), action.end(), action.begin(), ::tolower); //convertire l'ingresso in lettere minuscole
-    cout << endl;
-
-    actionCase = InputChoice(action);
-    return actionCase;
-}
-
 bool check_Item(const string& checkName){
     bool success= false;
     item=start_ptr;
@@ -113,19 +95,19 @@ void add_element () {
 
     while(!validDate){
         cout << "Enter the day of this event:";
-        cin >> day;//Node->day;
+        cin >> day;
         cout << "Enter the month of this event:";
-        cin >> month;//Node->month;
+        cin >> month;
         cout << "Enter the year of this event:";
-        cin >> year; //Node->year;
+        cin >> year;
         validDate = dateValidation(year, month, day);
     }
     item->day = day;
     item->month = month;
     item->year = year;
-    item->done="UNDONE";
-    char desc[100];
+    item->done="UNDONE"; //inizializzazione (un evento inserito non è stato completato )
 
+    char desc[100];
     cout << "Enter description[max 100 caratteri]:";
     cin.ignore(256,'\n');
     cin.getline(desc,sizeof(desc));
@@ -133,15 +115,13 @@ void add_element () {
     item->description=phrase;
 
     int i=1;
-    if (start_ptr == nullptr) {
+    if (start_ptr == nullptr) {  //inserimento a lista vuota
         start_ptr = item;
-        //i=1;
         item->setIdentifier(i);
     }
     else {
-        //i=1;
-        item2 = start_ptr; // We know this is not NULL - list not empty!
-        while(item2->next != nullptr) {
+        item2 = start_ptr;
+        while(item2->next != nullptr) { //inserimento dalla seconda posizione della lita in poi
             item2 = item2->next;
             i++;
         }
@@ -153,28 +133,29 @@ void add_element () {
 
 bool delete_element(const string& deleteName) {
     bool success=false;
-    if (start_ptr == nullptr)
+    if (start_ptr == nullptr)    //lista vuota, impossibile eliminare
         cout << "The list is empty!" << endl;
     else {
         item = start_ptr;
-        if(item->next == nullptr){
+        if(item->next == nullptr){     //lista con un solo elemento
             if (item->name==deleteName) {
                 start_ptr = nullptr;
                 delete item;
                 success=true;
             }
-        } else {   //la lista ha più di 2 elementi, partendo dall'inizio
+        } else {   //la lista ha almeno di 2 elementi, partendo dall'inizio
             if (item->name == deleteName) {  //partiamo dal primo elemento della lista
                 start_ptr = item->next;
                 delete item;
                 success=true;
                 return success;
             }                    //altrimenti scorriamo tutti gli elementi a partire dal secondo
-            item2=start_ptr;
+            item2=start_ptr;  //(per inizializzare il secondo puntatore occorre questa sezione)
             item=item->next;
+
             while (item != nullptr) {
                 if (item->name == deleteName) {
-                    item2->next = item->next; // Could be NULL
+                    item2->next = item->next; // può anche essere NULL
                     delete item;
                     success = true;
                     return success;
@@ -254,62 +235,79 @@ vector<string> split_line(const string& str, const char& ch) {
 
 void ReadFromFile() {
     ifstream file("ToDoList.txt");
-    string input;//, item;
 
-    while (getline(file, input)) {
+    file.seekg(0, ios::end);   //Controllo se il file è vuoto o meno
+    if (file.tellg() != 0) {
+        string input;//, item;
+        while (getline(file, input)) {       // prelevo dal file una riga alla volta per poterla elaborare
+            vector<string> ToDoItems = split_line(input, ' '); //divido la riga in ogni singola parola che la compone
+            cout << "" << endl;
+            item = new ListItem;
 
-        vector<string> ToDoItems = split_line(input, ' ');
-        cout << "" << endl;
-        for (auto & ToDoItem : ToDoItems) { //scorre ToDoItems Parola per parola
-            cout <<  ToDoItem << " " ;
-        }
-        item=new ListItem;
-
-        int index=0,n=0;
-        string name,desc,s,space=" ";
-        while(ToDoItems[index+n]!="|") {
-            s=ToDoItems[index+n];
-            name.append(s);
-            name.append(space);
-            n++;
-        }
-        name.pop_back();
-        item->name = name;
-
-        item->day = stoi(ToDoItems[n+1]);
-        item->month = stoi(ToDoItems[n+3]);
-        item->year = stoi(ToDoItems[n+5]);
-        item->done = ToDoItems[n+7];
-
-        index=n+9;
-        n=0;
-        while(index+n < ToDoItems.size()) {
-            s=ToDoItems[index+n];
-            desc.append(s);
-            desc.append(space);
-            n++;
-        }
-        desc.pop_back();
-        item->description= desc;
-
-        int id = 1;
-        if (start_ptr == nullptr) {
-            start_ptr = item;
-            item->next=nullptr;
-            item->setIdentifier(1);
-        } else {
-            item2 = start_ptr; // We know this is not NULL - list not empty!
-            while (item2->next != nullptr) {
-                item2 = item2->next;
-                id++;
+            int index = 0, n = 0;
+            string name, desc, component, space = " ";
+            while (ToDoItems[index + n] != "|") {            //la prima parte di ogni riga contiene il nome (composto da 1 o piu parole) dell'evento
+                component = ToDoItems[index + n];
+                name.append(component);
+                name.append(space);
+                n++;
             }
-            item->setIdentifier(id);
-            item2->next = item;
-            item->next = nullptr;
+            name.pop_back();
+            item->name = name;
+
+            item->day = stoi(ToDoItems[n + 1]);    // gli indici pari sono saltati poiche contengono solo caratteri di divisione ( "|" )
+            item->month = stoi(ToDoItems[n + 3]);
+            item->year = stoi(ToDoItems[n + 5]);
+            item->done = ToDoItems[n + 7];
+
+            index = n + 9;
+            n = 0;
+            while (index + n < ToDoItems.size()) {  //le ultime righe contengono la descrizione dell'evento
+                component = ToDoItems[index + n];
+                desc.append(component);
+                desc.append(space);
+                n++;
+            }
+            desc.pop_back();
+            item->description = desc;
+
+            int id = 1;
+            if (start_ptr == nullptr) {   //controllo se la lista in memoria è vuota
+                start_ptr = item;
+                item->next = nullptr;
+                item->setIdentifier(1);
+            } else {
+                item2 = start_ptr;        // sappiamo ora che non è sicuramente NULL - lista non vuota
+                while (item2->next != nullptr) {
+                    item2 = item2->next;
+                    id++;
+                }
+                item->setIdentifier(id);          //inserimento in fondo alla lista
+                item2->next = item;
+                item->next = nullptr;
+            }
         }
     }
     cout<<""<<endl;
     file.close();
+}
+
+int menu() {
+    string action;
+    int actionCase;
+    cout << "\t Welcome to the ToDo List" << endl;
+    std::cout<<" "<<std::endl;
+    std::cout<<"Digit  'list'   to see the complete list of Todo things"<<std::endl;
+    std::cout<<"Digit  'add'    to insert a new event"<<std::endl;
+    std::cout<<"Digit 'remove'  to remove an event from the list"<<std::endl;
+    std::cout<<"Digit 'check'   to indicate as 'done/undone' a list event "<<std::endl;
+    std::cout<<"Digit  'exit'   to end the program"<<std::endl;
+    std::cin>>action;
+    transform(action.begin(), action.end(), action.begin(), ::tolower); //convertire l'ingresso in lettere minuscole
+    cout << endl;
+
+    actionCase = InputChoice(action);
+    return actionCase;
 }
 
 int main() {
@@ -319,8 +317,8 @@ int main() {
 
     cout << "Welcome to To-Do list program!\n" << endl;
     cout << "Loading data from the external file...";
-
     ReadFromFile();
+
     do {
         system("pause");
         int action = menu();
@@ -366,4 +364,5 @@ int main() {
         }
     } while (execute);
     return 0;
+
 }
