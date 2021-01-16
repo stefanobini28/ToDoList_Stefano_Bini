@@ -9,8 +9,8 @@
 
 using namespace std;
 
-ListItem *item, *item2;
-ListItem *start_ptr =nullptr;
+ListItem *item, *item2, *item3;
+ListItem *start_ptr = nullptr;
 
 int InputChoice(const std::string& action) {
     int choice;
@@ -80,9 +80,37 @@ bool dateValidation(int year, int month, int day) {
     }
 }
 
+int ordered_insert(int day, int month, int year){
+    int position=1;
+    bool pos_found= false;
+    if(start_ptr != nullptr){
+        item3=start_ptr;
+        while(item3 != nullptr && !pos_found) {
+            if(item3->year < year){
+                item3=item3->next;
+                position++;
+            } else if(item3->year == year){
+                if(item3->month < month){
+                    item3=item3->next;
+                    position++;
+                } else if(item3->month == month) {
+                    if(item3->day <= day) {
+                        item3 = item3->next;
+                        position++;
+                    } else
+                        pos_found=true;
+                } else
+                    pos_found=true;
+            } else
+                pos_found=true;
+        }
+    }
+    return position;
+}
+
 void add_element () {
     bool validDate= false;
-    int year=0, month=0, day=0;
+    int year=0, month=0, day=0, position;
     item= new ListItem;
 
     char nome[20];
@@ -94,6 +122,7 @@ void add_element () {
     item->name=complete_name;
 
     while(!validDate){
+        day=0,month=0,year=0;
         cout << "Enter the day of this event:";
         cin >> day;
         cout << "Enter the month of this event:";
@@ -105,6 +134,7 @@ void add_element () {
     item->day = day;
     item->month = month;
     item->year = year;
+
     item->done="UNDONE"; //inizializzazione (un evento inserito non è stato completato )
 
     char desc[100];
@@ -114,20 +144,33 @@ void add_element () {
     string phrase(desc);
     item->description=phrase;
 
-    int i=1;
+    position=ordered_insert(day,month,year);
     if (start_ptr == nullptr) {  //inserimento a lista vuota
         start_ptr = item;
-        item->setIdentifier(i);
-    }
-    else {
+        item->setIdentifier(1);
+        item->next= nullptr;
+    } else {
         item2 = start_ptr;
-        while(item2->next != nullptr) { //inserimento dalla seconda posizione della lita in poi
-            item2 = item2->next;
-            i++;
+        if (position==1){
+            start_ptr=item;
+            item->next=item2;
+        } else {
+            int i = 1;
+            while (i < position - 1) {
+                item2 = item2->next;
+                i++;
+            }
+            item->next = item2->next;
+            item2->next = item;
+            item->setIdentifier(position);
+
+            item = item->next;
+            while (item != nullptr) {
+                position++;
+                item->setIdentifier(position);
+                item = item->next;
+            }
         }
-        item->setIdentifier(i);
-        item2->next= item;
-        item->next=nullptr;
     }
 }
 
@@ -242,10 +285,10 @@ void ReadFromFile() {
         cout << "File is empty" << endl;
         cout << "Note that program will halt" << endl; // error prompt
     } else {
-        string input;//, item;
+        string input;
+        cout << "" << endl;
         while (getline(file, input)) {       // prelevo dal file una riga alla volta per poterla elaborare
             vector<string> ToDoItems = split_line(input, ' '); //divido la riga in ogni singola parola che la compone
-            cout << "" << endl;
             item = new ListItem;
 
             int index = 0, n = 0;
@@ -286,7 +329,7 @@ void ReadFromFile() {
                     item2 = item2->next;
                     id++;
                 }
-                item->setIdentifier(id);          //inserimento in fondo alla lista
+                item->setIdentifier(id+1);          //inserimento in fondo alla lista
                 item2->next = item;
                 item->next = nullptr;
             }
@@ -368,5 +411,4 @@ int main() {
         }
     } while (execute);
     return 0;
-
 }
