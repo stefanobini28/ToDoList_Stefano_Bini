@@ -6,6 +6,7 @@
 #include "List.h"
 #include <sstream>
 #include <algorithm>
+#include <limits>
 
 using namespace std;
 
@@ -117,18 +118,59 @@ void add_element () {
 
     cout << "Enter name[max 20 caratteri]:";
     cin.ignore(256,'\n');
-    cin.getline(nome,sizeof(nome));
+    cin.getline(nome, sizeof(nome)+1);
     string complete_name(nome);
     item->name=complete_name;
 
+    cin.clear();
+    cin.ignore(256,'\n');
     while(!validDate){
         day=0,month=0,year=0;
+
         cout << "Enter the day of this event:";
         cin >> day;
+        while(true)
+        {
+            if(cin.fail()){
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(),'\n');
+                cout<<"You have entered wrong input format"<<endl;
+                cin>>day;
+            }
+            if(!cin.fail())
+                break;
+        }
+
         cout << "Enter the month of this event:";
         cin >> month;
+        while(true)
+        {
+            if(cin.fail())
+            {
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(),'\n');
+                cout<<"You have entered wrong input format"<<endl;
+                cin>>month;
+            }
+            if(!cin.fail())
+                break;
+        }
+
         cout << "Enter the year of this event:";
         cin >> year;
+        while(true)
+        {
+            if(cin.fail())
+            {
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(),'\n');
+                cout<<"You have entered wrong input format"<<endl;
+                cin>>year;
+            }
+            if(!cin.fail())
+                break;
+        }
+
         validDate = dateValidation(year, month, day);
     }
     item->day = day;
@@ -140,7 +182,7 @@ void add_element () {
     char desc[100];
     cout << "Enter description[max 100 caratteri]:";
     cin.ignore(256,'\n');
-    cin.getline(desc,sizeof(desc));
+    cin.getline(desc,sizeof(desc)+1);
     string phrase(desc);
     item->description=phrase;
 
@@ -222,12 +264,14 @@ void show_list () {
     else {
         if(item->next == nullptr) {
             cout <<""<<counter<<") "<<item->name<<" | "<<item->day<<"/"<<item->month<<"/"<<item->year<<" | "<<item->done<<" | "<<item->description<<""<<endl;
+            //cout <<item->getIdentifier();
         }
         else {
             cout << "Ecco la lista di tutto gli elementi inseriti:" << endl;
             cout << "" << endl;
             while (item != nullptr){
                 cout <<""<<counter<<") "<<item->name<<" | "<<item->day<<"/"<<item->month<<"/"<<item->year<<" | "<<item->done<<" | "<<item->description<<""<<endl;
+                //cout <<item->getIdentifier();
                 item = item->next;
                 counter++;
             }
@@ -289,6 +333,10 @@ void ReadFromFile() {
         cout << "" << endl;
         while (getline(file, input)) {       // prelevo dal file una riga alla volta per poterla elaborare
             vector<string> ToDoItems = split_line(input, ' '); //divido la riga in ogni singola parola che la compone
+            //cout << "" << endl;
+            /*for (auto &ToDoItem : ToDoItems) { //scorre ToDoItems Parola per parola
+                cout << ToDoItem << " ";
+            }*/
             item = new ListItem;
 
             int index = 0, n = 0;
