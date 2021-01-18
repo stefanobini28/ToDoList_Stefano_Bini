@@ -8,8 +8,9 @@ using namespace std;
 
 ListItem::ListItem():next(nullptr),day(0),month(0),year(0), identifier(1){}
 
-ListItem::ListItem(string itemName, int day, int month, int year, string description, string done, ListItem *next)
+ListItem::ListItem(string itemName, int day, int month, int year, string description, string done, ListItem *next,
+                   int identifier)
             : name(std::move(itemName)), day(day), month(month), year(year), description(std::move(description)),
-              done(std::move(done)),next(next) {}
+              done(std::move(done)), next(next), identifier(identifier) {}
 
 ListItem::~ListItem()=default;
