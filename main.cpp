@@ -129,7 +129,7 @@ void add_element () {
 
         cout << "Enter the day of this event:";
         cin >> day;
-        while(true)
+        while(true)           //controllo formato dell'ingresso (finche non viene inserito un valore intero)
         {
             if(cin.fail()){
                 cin.clear();
@@ -143,7 +143,7 @@ void add_element () {
 
         cout << "Enter the month of this event:";
         cin >> month;
-        while(true)
+        while(true)             //controllo formato dell'ingresso (finche non viene inserito un valore intero)
         {
             if(cin.fail())
             {
@@ -158,7 +158,7 @@ void add_element () {
 
         cout << "Enter the year of this event:";
         cin >> year;
-        while(true)
+        while(true)           //controllo formato dell'ingresso (finche non viene inserito un valore intero)
         {
             if(cin.fail())
             {
@@ -264,14 +264,12 @@ void show_list () {
     else {
         if(item->next == nullptr) {
             cout <<""<<counter<<") "<<item->name<<" | "<<item->day<<"/"<<item->month<<"/"<<item->year<<" | "<<item->done<<" | "<<item->description<<""<<endl;
-            //cout <<item->getIdentifier();
         }
         else {
             cout << "Ecco la lista di tutto gli elementi inseriti:" << endl;
             cout << "" << endl;
             while (item != nullptr){
                 cout <<""<<counter<<") "<<item->name<<" | "<<item->day<<"/"<<item->month<<"/"<<item->year<<" | "<<item->done<<" | "<<item->description<<""<<endl;
-                //cout <<item->getIdentifier();
                 item = item->next;
                 counter++;
             }
@@ -332,11 +330,7 @@ void ReadFromFile() {
         string input;
         cout << "" << endl;
         while (getline(file, input)) {       // prelevo dal file una riga alla volta per poterla elaborare
-            vector<string> ToDoItems = split_line(input, ' '); //divido la riga in ogni singola parola che la compone
-            //cout << "" << endl;
-            /*for (auto &ToDoItem : ToDoItems) { //scorre ToDoItems Parola per parola
-                cout << ToDoItem << " ";
-            }*/
+            vector<string> ToDoItems = split_line(input, ' '); //divido la riga in ogni singola parola che la compone           
             item = new ListItem;
 
             int index = 0, n = 0;
