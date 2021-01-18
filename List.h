@@ -10,7 +10,8 @@ using namespace std;
 class ListItem{
 public:
     ListItem();
-    ListItem(string itemName, int day, int month, int year, string description, string done, ListItem *next);
+    ListItem(string itemName, int day, int month, int year, string description, string done, ListItem *next,
+             int identifier);
     ~ListItem();
     string name;
     int day, month, year;
@@ -26,7 +27,7 @@ public:
         return identifier;
     }
 private:
-    int identifier{};
+    int identifier;
 };
 
 #endif //EXAMPLETXTTOLIST_LIST_H
