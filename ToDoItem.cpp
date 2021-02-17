@@ -44,14 +44,4 @@ ostream &operator<<(ostream &ostr, const ToDoItem & ToDoItem) {
     return ostr;
 }
 
-/*ToDoItem::ToDoItem():day(0),month(0),year(0),done(false) {}
-
-ToDoItem::ToDoItem(string itemName, int day, int month, int year, string description, bool done)
-        :name(std::move(itemName)),
-         day(day),
-         month(month),
-         year(year),
-         description(std::move(description)),
-         done(false){}*/
-
 ToDoItem::~ToDoItem()=default;
