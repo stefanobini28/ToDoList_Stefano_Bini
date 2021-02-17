@@ -1,33 +1,34 @@
 //
-// Created by stefano on 08/01/2021.
+// Created by Stefano on 02/02/2021.
 //
+
 
 #ifndef EXAMPLETXTTOLIST_LIST_H
 #define EXAMPLETXTTOLIST_LIST_H
 
-#include<list>
+#pragma once
+#include <iostream>
+#include <list>
+#include "ToDoItem.h"
+#include "Date.h"
 using namespace std;
-class ListItem{
+
+class List {
 public:
-    ListItem();
-    ListItem(string itemName, int day, int month, int year, string description, string done, ListItem *next,
-             int identifier);
-    ~ListItem();
-    string name;
-    int day, month, year;
-    string description;
-    string done;
+    ToDoItem Item;
+    list<ToDoItem> ToDoList;
+    List();
+    ~List();
+    //~list<ToDoItem> ToDoList;
 
-    ListItem *next;
+    //void PushBack(string itemName, int day, int month, int year, string description, bool done);
+    void Show_List();
+    void Add_Element();
+    bool Delete_Element(const string& deleteName);
+    void ordered_insert(ToDoItem Item);
 
-    void setIdentifier(int i) {
-        identifier = i;
-    }
-    int getIdentifier() const {
-        return identifier;
-    }
 private:
-    int identifier;
+    //ToDoItem Item;
 };
 
 #endif //EXAMPLETXTTOLIST_LIST_H
