@@ -1,5 +1,4 @@
 #include <iostream>
-#include <vector>
 #include <cstdlib>
 #include <string>
 #include <fstream>
@@ -7,9 +6,80 @@
 #include <sstream>
 #include <algorithm>
 #include <limits>
-#include "List.h"
+#include "Map.h"
 
 using namespace std;
+
+void addItem(Map newMap) {
+    bool validDate = false;
+    int year = 0, month = 0, day = 0;
+    string name,description;
+    char nome[20];
+
+
+        cout << "Enter name[max 20 caratteri]:";
+        cin.ignore(256, '\n');
+        cin.getline(nome, sizeof(nome) + 1);
+        string completeName(nome);
+        name = completeName;
+
+        /*cin.clear();
+        cin.ignore(256, '\n');*/
+
+    while (!validDate) {
+        year = 0, month = 0, day = 0;
+        cout << "Enter the day of this event:";
+        cin >> day;
+        while (true) {
+            if (cin.fail()) {
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                cout << "You have entered wrong input format,please retry:" << endl;
+                cin >> day;
+            }
+            if (!cin.fail())
+                break;
+        }
+        cout << "Enter the month of this event:";
+        cin >> month;
+        while (true) {
+            if (cin.fail()) {
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                cout << "You have entered wrong input format,please retry:" << endl;
+                cin >> month;
+            }
+            if (!cin.fail())
+                break;
+        }
+        cout << "Enter the year of this event:";
+        cin >> year;
+        while (true) {
+            if (cin.fail()) {
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                cout << "You have entered wrong input format,please retry:" << endl;
+                cin >> year;
+            }
+            if (!cin.fail())
+                break;
+        }
+        //validDate=todomap->setDate(day,month,year);
+        //validDate=Map::setDate(day,month,year);
+        validDate=Date::dateValidation(day,month,year);
+    }
+        char desc[100];
+        cout << "Enter description[max 100 caratteri]:";
+        cin.ignore(256, '\n');
+        cin.getline(desc, sizeof(desc) + 1);
+        string descr(desc);
+        description = descr;
+
+        bool result=newMap.addItem(/*name,day,month,year,description,false*/);
+        if(result){
+            cout<<"yeyy";
+        }
+}
 
 int InputChoice(const std::string& action) {
     int choice;
@@ -59,25 +129,28 @@ int main() {
     cout << "Welcome to To-Do list program!\n" << endl;
     cout << "Loading data from the external file..."<< endl;
     //ReadFromFile();
-    //List list <ToDoItem> ToDoList ;
-    List *ToDoList= new List();
+    //Map *todomap = nullptr;
+    Map newMap;
+
     do {
         system("pause");
         int action = menu();
 
         switch (action) {
             case 1:
-                ToDoList->Show_List();
+                newMap.showMap();
+                //Map::showMap() const;
                 break;
             case 2:
-                ToDoList->Add_Element();
+                addItem(newMap);
                 break;
             case 3:
                 cout << "Insert the name of the event you want to delete:" << endl;
                 cin.ignore(256, '\n');
                 cin.getline(name, sizeof(name));
                 deleteName = name;
-                success=ToDoList->Delete_Element(deleteName);
+                //success=todomap->deleteElement(deleteName);
+                //success=todomap.deleteElement(deleteName);
                 if (success)
                     cout << "The element has been deleted successfully" << endl;
                 else
