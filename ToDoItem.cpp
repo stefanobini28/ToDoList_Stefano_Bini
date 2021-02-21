@@ -7,37 +7,18 @@
 using namespace std;
 
 
-ToDoItem::ToDoItem():date(0,0,0),done(false) {}
+ToDoItem::ToDoItem():done(false) {}
 
-ToDoItem::ToDoItem(string itemName, Date ddate, string description, bool done)
+ToDoItem::ToDoItem(string itemName, /*Date ddate,*/ string description, bool done)
         :name(std::move(itemName)),
-         date (ddate),
+         //date (ddate),
          description(std::move(description)),
          done(false){}
-
-bool ToDoItem::setDate(int day, int month, int year) {
-    {
-        bool validDate=date.dateValidation(day,month,year);
-        if(!validDate){
-            return false;
-        } else {
-            date.setDay(day);
-            date.setMonth(month);
-            date.setYear(year);
-            return true;
-        }
-    }
-}
-
-Date ToDoItem::getDate() const {
-    this->date.printdate();
-        return date;
-}
 
 ostream &operator<<(ostream &ostr, const ToDoItem & ToDoItem) {
 
     cout<< ToDoItem.name <<" ";
-    /*cout<<*/ ToDoItem.getDate() /*<<" "*/;
+    //cout<< ToDoItem.date.printDate() <<" ";
     cout<< ToDoItem.description <<" ";
     cout<< ToDoItem.done <<" ";
 
