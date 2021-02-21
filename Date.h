@@ -2,21 +2,22 @@
 // Created by betty on 13/02/2021.
 //
 
-#ifndef EXAMPLETXTTOLIST_DATE_H
-#define EXAMPLETXTTOLIST_DATE_H
+#ifndef EXAMPLETXTTOMAP_DATE_H
+#define EXAMPLETXTTOMAP_DATE_H
+
+#include <algorithm>
+#include <string>
+#include<utility>
+#include <vector>
+using namespace std;
 
 class Date
 {
-private:
-    int month;
-    int day;
-    int year;
-
 public:
     Date();
     Date(int day, int month, int year);
 
-    void printdate() const;
+    string printDate() const;
     static bool dateValidation(int Day, int Month, int Year);
 
     void setDay(int itemDay);
@@ -26,6 +27,14 @@ public:
     void setYear(int itemYear);
     int getYear() const;
 
+    bool setDate(int day, int month, int year);
+
+    Date getDate() const;
+
+private:
+    int month;
+    int day;
+    int year;
 };
 
-#endif //EXAMPLETXTTOLIST_DATE_H
+#endif //EXAMPLETXTTOMAP_DATE_H
