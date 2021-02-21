@@ -64,21 +64,19 @@ void addItem(Map newMap) {
             if (!cin.fail())
                 break;
         }
-        //validDate=todomap->setDate(day,month,year);
-        //validDate=Map::setDate(day,month,year);
         validDate=Date::dateValidation(day,month,year);
     }
-        char desc[100];
-        cout << "Enter description[max 100 caratteri]:";
-        cin.ignore(256, '\n');
-        cin.getline(desc, sizeof(desc) + 1);
-        string descr(desc);
-        description = descr;
+    char desc[100];
+    cout << "Enter description[max 100 caratteri]:";
+    cin.ignore(256, '\n');
+    cin.getline(desc, sizeof(desc) + 1);
+    string descr(desc);
+    description = descr;
 
-        bool result=newMap.addItem(/*name,day,month,year,description,false*/);
-        if(result){
-            cout<<"yeyy";
-        }
+    bool result=newMap.addItem(/*name,day,month,year,description,false*/);
+    if(result){
+        cout<<"yeyy";
+    }
 }
 
 int InputChoice(const std::string& action) {
@@ -129,7 +127,7 @@ int main() {
     cout << "Welcome to To-Do list program!\n" << endl;
     cout << "Loading data from the external file..."<< endl;
     //ReadFromFile();
-    //Map *todomap = nullptr;
+
     Map newMap;
 
     do {
