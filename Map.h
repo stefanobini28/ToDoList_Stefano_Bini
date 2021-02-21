@@ -19,16 +19,13 @@ class Map {
 public:
     Map();
     ToDoItem item;
-    /*typedef multimap<int,ToDoItem> map;
-    map todomap;
-    */
-
+    
     Date date;
     multimap</*Date*/int,ToDoItem>::iterator iterator;
     ~Map();
 
     void showMap() const ;
-    bool addItem (/*const string& name, int day, int month, int year, const string& description, bool done*/) ;
+    bool addItem ();//const string& name, int day, int month, int year, const string& description, bool done) ;
     //bool setDate(int day,int month, int year);
     bool deleteElement(const string& deleteName);
     //void orderedInsert(const ToDoItem& Item);
