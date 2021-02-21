@@ -4,6 +4,7 @@
 
 #include "Date.h" //includes the Date header file
 #include <iostream>
+#include <sstream>
 
 using namespace std;
 
@@ -14,9 +15,6 @@ Date::Date()
     day = 1;//default day value
     year = 2021;//default year value
 }
-//postcondition: a Date with a month, day and year has been created
-
-//precondition: Date will check if any of the conditions have been violated
 
 Date::Date(int Day, int Month, int Year) {
     this->month = Month;
@@ -52,8 +50,13 @@ bool Date::dateValidation(int Day, int Month, int Year) {
     }
 }
 
-void Date::printdate() const {
-    cout << day << "/" << month << "/" << year<<" ";
+string Date::printDate() const {
+    string sdate;
+    stringstream ss;
+    ss << day << "/" << month << "/" << year;
+    ss>> sdate;
+    return sdate;
+    //cout << day << "/" << month << "/" << year<<" ";
 }
 
 void Date::setDay(int itemDay) {
@@ -78,4 +81,20 @@ int Date::getYear() const {
     return year;
 }
 
+bool Date::setDate(int iday, int imonth, int iyear) {
+    {
+        bool validDate=Date::dateValidation(iday,imonth,iyear);
+        if(!validDate){
+            return false;
+        } else {
+            setDay(iday);
+            setMonth(imonth);
+            setYear(iyear);
+            return true;
+        }
+    }
+}
 
+Date Date::getDate() const {
+    return {getDay(),getMonth(),getYear()};
+}
