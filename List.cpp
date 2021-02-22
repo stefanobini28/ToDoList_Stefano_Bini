@@ -3,127 +3,59 @@
 //
 
 #include <string>
-//#include <utility>
-#include "List.h"
-#include <list>
-#include <limits>
+#include "Map.h"
+
 using namespace std;
 
-List::List() = default;
+Map::Map() = default;
 
-List::~List() = default;
+Map::~Map() = default;
 
-list <ToDoItem> ToDoList;
-
-void List::Show_List() {
-    if(ToDoList.empty()){
+void Map::showMap() const {
+    if(todomap.empty()){
         cout<<"sorry, list is actually empty"<<endl;
-    }else{
-    int num=1;
-        /*for(auto it=ToDoList.begin(); it!=ToDoList.end();it++){*/
+    }
+    else{
+        int num=1;
+        string done;
         cout<<"List elements are the following:"<<endl;
-        for(const auto& it:ToDoList) {
-            cout << num << ") " << it << endl;
+        for(const auto & it : todomap) {
+            if(it.second.getItemDone() == 0)
+                done="False";
+            else
+                done="True";
+
+            cout << num << ") " << it.first<< " Name: " << it.second.getName()<< " Description: "<< it.second.getDescription() << " Done: "<< done << endl;
             num++;
         }
     }
 }
 
-void List::Add_Element() {
-    bool validDate= false;
-    int year=0, month=0, day=0, position;
-    //Item = new ToDoItem;
+void Map::addItem(const string& name,int day,int month, int year, const string& description, bool done) {
 
-    char nome[20];
+    date.setDate(year,month,day);
+    string sdate=date.printDate();
 
-    cout << "Enter name[max 20 caratteri]:";
-    cin.ignore(256,'\n');
-    cin.getline(nome, sizeof(nome)+1);
-    string complete_name(nome);
-    //item->name=complete_name;
+    item.setName(name);
+    item.setDescription(description);
+    item.setItemDone(done);
 
-    cin.clear();
-    cin.ignore(256,'\n');
-    while(!validDate){
-        day=0,month=0,year=0;
-
-        cout << "Enter the day of this event:";
-        cin >> day;
-        while(true)
-        {
-            if(cin.fail()){
-                cin.clear();
-                cin.ignore(numeric_limits<streamsize>::max(),'\n');
-                cout<<"You have entered wrong input format"<<endl;
-                cin>>day;
-            }
-            if(!cin.fail())
-                break;
-        }
-
-        cout << "Enter the month of this event:";
-        cin >> month;
-        while(true)
-        {
-            if(cin.fail())
-            {
-                cin.clear();
-                cin.ignore(numeric_limits<streamsize>::max(),'\n');
-                cout<<"You have entered wrong input format"<<endl;
-                cin>>month;
-            }
-            if(!cin.fail())
-                break;
-        }
-
-        cout << "Enter the year of this event:";
-        cin >> year;
-        while(true)
-        {
-            if(cin.fail())
-            {
-                cin.clear();
-                cin.ignore(numeric_limits<streamsize>::max(),'\n');
-                cout<<"You have entered wrong input format"<<endl;
-                cin>>year;
-            }
-            if(!cin.fail())
-                break;
-        }
-        validDate = Item.setDate(day,month,year);
+    if (todomap.empty()) {
+        iterator = todomap.insert(pair<string, ToDoItem>{sdate, ToDoItem{item.getName(), item.getDescription(), item.getItemDone()}});
+    } else{
+        todomap.insert(iterator,pair<string, ToDoItem>{sdate, ToDoItem{item.getName(), item.getDescription(), item.getItemDone()}});
     }
-
-    //item->done="UNDONE"; //inizializzazione (un evento inserito non è stato completato )
-    bool done = false;
-
-    char desc[100];
-    cout << "Enter description[max 100 caratteri]:";
-    cin.ignore(256,'\n');
-    cin.getline(desc,sizeof(desc)+1);
-    string phrase(desc);
-    //item->description=phrase;
-
-    //position=ordered_insert(day,month,year); //Not now
-
-    //Item=(complete_name,day,month,year,phrase,done);
-
-    Item.setName(complete_name);
-    //Item.setDate(day,month,year);
-    Item.setdDescription(phrase);
-    Item.setItemDone(done);
-
-    //ordered_insert(Item);
-    ToDoList.push_back(Item);
 }
 
-bool List::Delete_Element(const string& deleteName) {
+
+bool Map::deleteElement(const string& deleteName) {
     bool success = false;
-    if (ToDoList.empty()) {
-        cout << "The list is empty!" << endl;
+    if (todomap.empty()) {
+        cout << "The map is empty!" << endl;
     } else {
-        for (auto it = ToDoList.begin(); it != ToDoList.end(); it++) {
-            if((*it).getName() == deleteName){
-                ToDoList.erase(it);
+        for(const auto & it : todomap) {
+            if(it.second.getName() == deleteName){
+                todomap.erase(it.first);
                 success = true;
                 return success;
             }
@@ -132,31 +64,39 @@ bool List::Delete_Element(const string& deleteName) {
     return success;
 }
 
-void List::ordered_insert(ToDoItem Item) {
-    Date date = Item.getDate();
-    int day = date.getDay();
-    int month = date.getMonth();
-    int year = date.getYear();
+bool Map::checkItem(const string& checkName){
+    bool success = false,done;
+    int i=0;
+    string sdate, name, desc,result;
+    string array[3];
+    if (todomap.empty()) {
+        cout << "The map is empty!" << endl;
+    } else {
+        for(const auto & it : todomap) {
+            if(it.second.getName() == checkName){
+                sdate=it.first;
 
-    for (auto it = ToDoList.begin(); it != ToDoList.end(); it++) {
-        Date current_date = (*it).getDate();
-        int current_day = current_date.getDay();
-        int current_month = current_date.getMonth();
-        int current_year = current_date.getYear();
+                string delimiter = "/";
+                size_t pos=0;
+                while ((pos = sdate.find(delimiter)) != std::string::npos) {
+                    array[i] = sdate.substr(0, pos);
+                    i++;
+                    sdate.erase(0, pos + delimiter.length());
+                }
 
-        if (current_year > year) {
-            ToDoList.insert(it,Item);
-            exit;
-            break;
-        } else if (current_year == year && current_month > month){
-            ToDoList.insert(it,Item);
-            exit;
-            break;
-        } else if (current_year == year && current_month == month && current_day >= day){
-            ToDoList.insert(it,Item);
-            exit;
-            break;
+                name=it.second.getName();
+                desc=it.second.getDescription();
+
+                if(it.second.getItemDone() == 0){
+                    done=true;
+                }else
+                    done=false;
+                todomap.erase(it.first);
+                addItem(name,stoi(array[1]),std::stoi(array[1]),std::stoi(array[0]),desc,done);
+                success = true;
+                return success;
+            }
         }
     }
-    ToDoList.push_back(Item);
+    return success;
 }
