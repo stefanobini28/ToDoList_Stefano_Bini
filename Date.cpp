@@ -1,29 +1,27 @@
 //
-// Created by betty on 13/02/2021.
+// Created by Stefano on 13/02/2021.
 //
 
-#include "Date.h" //includes the Date header file
+#include "Date.h"
 #include <iostream>
+#include <sstream>
 
 using namespace std;
 
-//default constructor with default values
 Date::Date()
 {
+    year = 2021;//default year value
     month = 1;//default month value
     day = 1;//default day value
-    year = 2021;//default year value
 }
-//postcondition: a Date with a month, day and year has been created
 
-//precondition: Date will check if any of the conditions have been violated
-
-Date::Date(int Day, int Month, int Year) {
+Date::Date(int Year, int Month, int Day) {
+    this->year = Year;
     this->month = Month;
     this->day = Day;
-    this->year = Year;
+
 }
-bool Date::dateValidation(int Day, int Month, int Year) {
+bool Date::dateValidation(int Year, int Month, int Day) {
     int currMonthDays;
     if (Year >= 2021 && Year <= 9999) {
         if (Month >= 1 && Month <= 12) {
@@ -52,8 +50,12 @@ bool Date::dateValidation(int Day, int Month, int Year) {
     }
 }
 
-void Date::printdate() const {
-    cout << day << "/" << month << "/" << year<<" ";
+string Date::printDate() const {
+    string sdate;
+    stringstream ss;
+    ss << year << "/" << month << "/" << day ;
+    ss>> sdate;
+    return sdate;
 }
 
 void Date::setDay(int itemDay) {
@@ -78,4 +80,20 @@ int Date::getYear() const {
     return year;
 }
 
+bool Date::setDate(int iyear, int imonth, int iday) {
+    {
+        bool validDate=Date::dateValidation(iyear,imonth,iday);
+        if(!validDate){
+            return false;
+        } else {
+            setYear(iyear);
+            setMonth(imonth);
+            setDay(iday);
+            return true;
+        }
+    }
+}
 
+Date Date::getDate() const {
+    return {getYear(), getMonth(),getDay()};
+}
