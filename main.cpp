@@ -1,5 +1,4 @@
 #include <iostream>
-#include <vector>
 #include <cstdlib>
 #include <string>
 #include <fstream>
@@ -7,7 +6,7 @@
 #include <sstream>
 #include <algorithm>
 #include <limits>
-#include "List.h"
+#include "Map.h"
 
 using namespace std;
 
@@ -53,46 +52,106 @@ int menu() {
 
 int main() {
     bool execute = true, success;
-    string deleteName, checkname;
-    char name[20];
+    string deleteName, checkName;
 
     cout << "Welcome to To-Do list program!\n" << endl;
     cout << "Loading data from the external file..."<< endl;
-    //ReadFromFile();
-    //List list <ToDoItem> ToDoList ;
-    List *ToDoList= new List();
+
+    Map newMap;
+
+    bool validDate;
+    int year = 0, month = 0, day = 0;
+    char nome[20], desc[100];
+    string description;
+    char *name;
+
     do {
         system("pause");
         int action = menu();
 
         switch (action) {
             case 1:
-                ToDoList->Show_List();
+                newMap.showMap();
                 break;
             case 2:
-                ToDoList->Add_Element();
+                validDate = false;
+
+                cout << "Enter name[max 20 characters]:";
+                cin.ignore(256, '\n');
+                cin.getline(nome, sizeof(nome) + 1);
+                name = nome;
+
+                while (!validDate) {
+                    year = 0, month = 0, day = 0;
+                    cout << "Enter the day of this event:";
+                    cin >> day;
+                    while (true) {
+                        if (cin.fail()) {
+                            cin.clear();
+                            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                            cout << "You have entered wrong input format,please retry:" << endl;
+                            cin >> day;
+                        }
+                        if (!cin.fail())
+                            break;
+
+                    }
+                    cout << "Enter the month of this event:";
+                    cin >> month;
+                    while (true) {
+                        if (cin.fail()) {
+                            cin.clear();
+                            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                            cout << "You have entered wrong input format,please retry:" << endl;
+                            cin >> day;
+                        }
+                        if (!cin.fail())
+                            break;
+
+                    }
+                    cout << "Enter the year of this event:";
+                    cin >> year;
+                    while (true) {
+                        if (cin.fail()) {
+                            cin.clear();
+                            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                            cout << "You have entered wrong input format,please retry:" << endl;
+                            cin >> day;
+                        }
+                        if (!cin.fail())
+                            break;
+
+                    }
+                    validDate=Date::dateValidation(year,month,day);
+                }
+                cout << "Enter description[max 100 characters]:";
+                cin.ignore(256, '\n');
+                cin.getline(desc, sizeof(desc) + 1);
+                description = desc;
+
+                newMap.addItem(name,day,month,year,description,false);
                 break;
             case 3:
                 cout << "Insert the name of the event you want to delete:" << endl;
                 cin.ignore(256, '\n');
-                cin.getline(name, sizeof(name));
+                cin.getline(name, sizeof(name)+1);
                 deleteName = name;
-                success=ToDoList->Delete_Element(deleteName);
+                success=newMap.deleteElement(deleteName);
                 if (success)
                     cout << "The element has been deleted successfully" << endl;
                 else
-                    cout << "can't found the element, please retry" << endl;
+                    cout << "can't find the element, please retry" << endl;
                 break;
             case 4:
                 cout << "write here the name of the event you want to change [DONE <-> UNDONE]:" << endl;
                 cin.ignore(256, '\n');
-                cin.getline(name, sizeof(name));
-                checkname = name;
-                //success=ToDoList->Check_Item(checkname);
+                cin.getline(name, sizeof(name)+1);
+                checkName = name;
+                success=newMap.checkItem(checkName);
                 if (success)
                     cout << "The element has been changed successfully" << endl;
                 else
-                    cout << "can't found the element, please retry" << endl;
+                    cout << "can't find the element, please retry" << endl;
                 break;
             case 5:
                 cout << "Have a nice day!" << endl;
@@ -102,6 +161,7 @@ int main() {
             default:
                 cout << "Input was not recognized. Try again or "
                      << "\nenter 'exit' to end the program." << endl;
+                cin.ignore(256, '\n');
                 execute = true;
         }
     } while (execute);
