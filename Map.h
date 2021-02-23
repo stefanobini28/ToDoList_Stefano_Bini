@@ -12,6 +12,9 @@
 #include <map>
 #include <algorithm>
 #include <utility>
+#include <fstream>
+#include <string>
+#include <vector>
 
 using namespace std;
 
@@ -28,8 +31,12 @@ public:
     bool deleteElement(const string &deleteName);
     bool checkItem(const string& checkName);
 
+    void writeOnFile() const;
+    void readFromFile();
+
 private:
     multimap<string,ToDoItem> todomap;
     multimap<string,ToDoItem>::iterator iterator;
 };
+
 #endif //EXAMPLETXTTOMAP_MAP_H
