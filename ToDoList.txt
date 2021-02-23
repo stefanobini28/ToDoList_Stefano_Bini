@@ -1,5 +1,5 @@
-dentista | 6  | 1 | 2021 | DONE | Appuntamento dal dentista per otturazione
-tagliare il prato | 5  | 2 | 2021 | UNDONE | Tagliare il prato di casa
-verniciatura | 18  | 3 | 2021 | UNDONE | Verniciare il muro di casa prima della primavera
-consegna vaccino | 20  | 11 | 2021 | UNDONE | Appuntamento per la vaccinazione contro il covid-19
-pensione | 31  | 12 | 2064 | UNDONE | Andare in pensione dopo svariati anni di lavoro
+dentista | 2021/1/6 | DONE | Appuntamento dal dentista per otturazione
+tagliare il prato | 2021/2/5 | UNDONE | Tagliare il prato di casa
+verniciatura | 2021/3/18 | UNDONE | Verniciare il muro di casa prima della primavera
+consegna vaccino | 2021/11/20 | UNDONE | Appuntamento per la vaccinazione contro il covid-19
+pensione | 2064/12/31 | UNDONE | Andare in pensione dopo svariati anni di lavoro
