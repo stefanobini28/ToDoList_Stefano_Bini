@@ -1,7 +1,6 @@
 #include <iostream>
 #include <cstdlib>
 #include <string>
-#include <fstream>
 #include "ToDoItem.h"
 #include <sstream>
 #include <algorithm>
@@ -51,19 +50,16 @@ int menu() {
 }
 
 int main() {
-    bool execute = true, success;
-    string deleteName, checkName;
+    int year = 0, month = 0, day = 0;
+    char nome[20], desc[100], *name;
+
+    bool execute = true, success, validDate;
+    string deleteName, checkName, description;
+    Map newMap;
 
     cout << "Welcome to To-Do list program!\n" << endl;
     cout << "Loading data from the external file..."<< endl;
-
-    Map newMap;
-
-    bool validDate;
-    int year = 0, month = 0, day = 0;
-    char nome[20], desc[100];
-    string description;
-    char *name;
+    newMap.readFromFile();
 
     do {
         system("pause");
@@ -155,7 +151,7 @@ int main() {
                 break;
             case 5:
                 cout << "Have a nice day!" << endl;
-                //WriteOnFile();
+                newMap.writeOnFile();
                 execute = false;
                 break;
             default:
