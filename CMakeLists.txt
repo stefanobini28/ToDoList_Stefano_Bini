@@ -3,4 +3,4 @@ project(ExampleTxtToMap)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(ExampleTxtToMap main.cpp ToDoItem.h ToDoItem.cpp ToDoList.txt Map.cpp Map.h Date.h Date.cpp)
+add_executable(ExampleTxtToMap main.cpp ToDoItem.h ToDoItem.cpp ToDoMap.txt Map.cpp Map.h Date.h Date.cpp)
