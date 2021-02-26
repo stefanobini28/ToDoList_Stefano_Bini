@@ -7,14 +7,14 @@
 
 #pragma once
 #include <iostream>
-#include "ToDoItem.h"
-#include "Date.h"
 #include <map>
 #include <algorithm>
 #include <utility>
 #include <fstream>
 #include <string>
 #include <vector>
+#include "ToDoItem.h"
+#include "Date.h"
 
 using namespace std;
 
@@ -40,3 +40,4 @@ private:
 };
 
 #endif //EXAMPLETXTTOMAP_MAP_H
+
