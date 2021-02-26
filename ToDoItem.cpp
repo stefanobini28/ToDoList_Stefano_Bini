@@ -2,8 +2,6 @@
 // Created by Stefano on 08/01/2021.
 //
 
-#include <string>
-#include <iostream>
 #include "ToDoItem.h"
 using namespace std;
 
