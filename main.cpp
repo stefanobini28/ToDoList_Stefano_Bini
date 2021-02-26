@@ -1,7 +1,6 @@
 #include <iostream>
 #include <cstdlib>
 #include <string>
-#include "ToDoItem.h"
 #include <sstream>
 #include <algorithm>
 #include <limits>
@@ -39,10 +38,10 @@ int menu() {
     std::cout<<"Digit  'list'   to see the complete list of Todo things"<<std::endl;
     std::cout<<"Digit  'add'    to insert a new event"<<std::endl;
     std::cout<<"Digit 'remove'  to remove an event from the list"<<std::endl;
-    std::cout<<"Digit 'check'   to indicate as 'done/undone' a list event "<<std::endl;
+    std::cout<<"Digit 'check'   to set as 'done/undone' a list event from opposite (undone/done) "<<std::endl;
     std::cout<<"Digit  'exit'   to end the program"<<std::endl;
     std::cin>>action;
-    transform(action.begin(), action.end(), action.begin(), ::tolower); //convertire l'ingresso in lettere minuscole
+    transform(action.begin(), action.end(), action.begin(), ::tolower); //converte l'ingresso in lettere minuscole
     cout << endl;
 
     actionCase = InputChoice(action);
@@ -51,29 +50,27 @@ int menu() {
 
 int main() {
     int year = 0, month = 0, day = 0;
-    char nome[20], desc[100], *name;
-
+    char nome[20], desc[100];
     bool execute = true, success, validDate;
-    string deleteName, checkName, description;
+    string name, deleteName, checkName, description;
     Map newMap;
 
-    cout << "Welcome to To-Do list program!\n" << endl;
+    cout << "Welcome to To-Do list program!" << endl;
     cout << "Loading data from the external file..."<< endl;
-    newMap.readFromFile();
+    newMap.readFromFile();  //lettura da file di testo della lista salvata in precedenza
 
     do {
         system("pause");
         int action = menu();
+        cin.ignore(256, '\n');
 
         switch (action) {
             case 1:
-                newMap.showMap();
+                newMap.showMap(); //mostra la lista aggiornata degli eventi
                 break;
             case 2:
                 validDate = false;
-
                 cout << "Enter name[max 20 characters]:";
-                cin.ignore(256, '\n');
                 cin.getline(nome, sizeof(nome) + 1);
                 name = nome;
 
@@ -90,7 +87,6 @@ int main() {
                         }
                         if (!cin.fail())
                             break;
-
                     }
                     cout << "Enter the month of this event:";
                     cin >> month;
@@ -103,7 +99,6 @@ int main() {
                         }
                         if (!cin.fail())
                             break;
-
                     }
                     cout << "Enter the year of this event:";
                     cin >> year;
@@ -116,7 +111,6 @@ int main() {
                         }
                         if (!cin.fail())
                             break;
-
                     }
                     validDate=Date::dateValidation(year,month,day);
                 }
@@ -124,40 +118,42 @@ int main() {
                 cin.ignore(256, '\n');
                 cin.getline(desc, sizeof(desc) + 1);
                 description = desc;
-
-                newMap.addItem(name,day,month,year,description,false);
+                newMap.addItem(name,day,month,year,description,false); //aggiunta di un elemento d parte dell'utente
                 break;
             case 3:
                 cout << "Insert the name of the event you want to delete:" << endl;
-                cin.ignore(256, '\n');
-                cin.getline(name, sizeof(name)+1);
-                deleteName = name;
-                success=newMap.deleteElement(deleteName);
-                if (success)
-                    cout << "The element has been deleted successfully" << endl;
-                else
-                    cout << "can't find the element, please retry" << endl;
+                while (!success) {
+                    cin.getline(nome, sizeof(nome) + 1);
+                    deleteName = nome;
+                    success = newMap.deleteElement(deleteName);  //rimuovere un evento dalla lista
+                    if (success)
+                        cout << "The element has been deleted successfully" << endl;
+                    else
+                        cout << "can't find the element, please retry" << endl;
+                }
                 break;
             case 4:
                 cout << "write here the name of the event you want to change [DONE <-> UNDONE]:" << endl;
-                cin.ignore(256, '\n');
-                cin.getline(name, sizeof(name)+1);
-                checkName = name;
-                success=newMap.checkItem(checkName);
-                if (success)
-                    cout << "The element has been changed successfully" << endl;
-                else
-                    cout << "can't find the element, please retry" << endl;
+                while (!success) {
+                    cin.getline(nome, sizeof(nome) + 1);
+                    checkName = nome;
+                    success = newMap.checkItem(
+                            checkName);  //contrassegnare un evento della todolist come fatto/non fatto
+
+                    if (success)
+                        cout << "The element has been changed successfully" << endl;
+                    else
+                        cout << "can't find the element, please retry:" << endl;
+                }
                 break;
             case 5:
                 cout << "Have a nice day!" << endl;
-                newMap.writeOnFile();
+                newMap.writeOnFile();   //scrittura sul file di testo della lista aggiornata
                 execute = false;
                 break;
             default:
                 cout << "Input was not recognized. Try again or "
                      << "\nenter 'exit' to end the program." << endl;
-                cin.ignore(256, '\n');
                 execute = true;
         }
     } while (execute);
