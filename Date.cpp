@@ -3,24 +3,16 @@
 //
 
 #include "Date.h"
-#include <iostream>
-#include <sstream>
 
 using namespace std;
 
-Date::Date()
+Date::Date() //default values
 {
-    year = 2021;//default year value
-    month = 1;//default month value
-    day = 1;//default day value
+    year = 2021;
+    month = 1;
+    day = 1;
 }
 
-Date::Date(int Year, int Month, int Day) {
-    this->year = Year;
-    this->month = Month;
-    this->day = Day;
-
-}
 bool Date::dateValidation(int Year, int Month, int Day) {
     int currMonthDays;
     if (Year >= 2021 && Year <= 9999) {
@@ -53,7 +45,7 @@ bool Date::dateValidation(int Year, int Month, int Day) {
 string Date::printDate() const {
     string sdate;
     stringstream ss;
-    ss << year << "/" << month << "/" << day ;
+    ss << year << "/" << month << "/" << day;
     ss>> sdate;
     return sdate;
 }
@@ -62,22 +54,12 @@ void Date::setDay(int itemDay) {
     day = itemDay;
 }
 
-int Date::getDay() const {
-    return day;
-}
 void Date::setMonth(int itemMonth) {
     month = itemMonth;
 }
 
-int Date::getMonth() const {
-    return month;
-}
 void Date::setYear(int itemYear) {
     year = itemYear;
-}
-
-int Date::getYear() const {
-    return year;
 }
 
 bool Date::setDate(int iyear, int imonth, int iday) {
@@ -92,8 +74,4 @@ bool Date::setDate(int iyear, int imonth, int iday) {
             return true;
         }
     }
-}
-
-Date Date::getDate() const {
-    return {getYear(), getMonth(),getDay()};
 }
