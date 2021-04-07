@@ -5,9 +5,6 @@
 #include "ToDoItem.h"
 using namespace std;
 
-
-ToDoItem::ToDoItem():done(false) {}
-
 ToDoItem::ToDoItem(string itemName, string description, bool done)
         :name(std::move(itemName)),
          description(std::move(description)),
