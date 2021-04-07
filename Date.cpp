@@ -6,11 +6,66 @@
 
 using namespace std;
 
-Date::Date() //default values
-{
-    year = 2021;
-    month = 1;
-    day = 1;
+Date::Date(int Year, int Month, int Day) {
+    try {
+        setDay(Year,Month,Day);
+        setMonth(Year,Month);
+        setYear(Year);
+    }catch(exception &alert){
+        throw logic_error(alert.what());
+    }
+}
+
+string Date::printDate() const {
+    string sdate;
+    stringstream ss;
+    ss << year << "/" << month << "/" << day;
+    ss>> sdate;
+    return sdate;
+}
+
+void Date::setDay(int itemYear, int itemMonth, int itemDay) {
+    int currMonthDays;
+    if(itemYear >= 2021 && itemYear <= 9999) {
+        if (itemMonth >= 1 && itemMonth <= 12) {
+            if (itemMonth == 4 || itemMonth == 6 || itemMonth == 9 || itemMonth == 11)
+                currMonthDays = 30;
+            else if (itemMonth != 2)
+                currMonthDays = 31;
+            else if ((itemYear % 4 == 0 && itemYear % 100 != 0) || itemYear % 400 == 0)
+                currMonthDays = 29;
+            else
+                currMonthDays = 28;
+
+            if (itemDay >= 1 && itemDay <= currMonthDays)
+                day = itemDay;
+            else
+                throw invalid_argument("wrong day value");
+        }
+        else
+           throw invalid_argument("wrong month value");
+    }
+    else
+       throw invalid_argument("wrong year value");
+}
+
+void Date::setMonth(int itemYear, int itemMonth) {
+    if(itemYear >= 2021 && itemYear <= 9999) {
+        if (itemMonth >= 1 && itemMonth <= 12) {
+            month = itemMonth;
+        }
+        else
+          throw invalid_argument("wrong month value");
+    }
+    else
+       throw invalid_argument("wrong year value");
+}
+
+void Date::setYear(int itemYear) {
+    if(itemYear >= 2021 && itemYear <= 9999)
+        year = itemYear;
+    else
+        throw invalid_argument("wrong year value");
 }
 
 bool Date::dateValidation(int Year, int Month, int Day) {
@@ -29,49 +84,24 @@ bool Date::dateValidation(int Year, int Month, int Day) {
             if (Day >= 1 && Day <= currMonthDays) {
                 return true;
             }else {
-                std::cout << "Wrong day value insert" << std::endl;
-                return false;
+                throw invalid_argument("Wrong day value insert");
             }
         } else {
-            std::cout << "Wrong month value insert" << std::endl;
-            return false;
+            throw invalid_argument("Wrong month value insert");
         }
     } else {
-        std::cout << "Wrong year value insert" << std::endl;
-        return false;
+        throw invalid_argument("Wrong year value insert");
     }
 }
 
-string Date::printDate() const {
-    string sdate;
-    stringstream ss;
-    ss << year << "/" << month << "/" << day;
-    ss>> sdate;
-    return sdate;
+int Date::getYear() const {
+    return year;
 }
 
-void Date::setDay(int itemDay) {
-    day = itemDay;
+int Date::getMonth() const {
+    return month;
 }
 
-void Date::setMonth(int itemMonth) {
-    month = itemMonth;
-}
-
-void Date::setYear(int itemYear) {
-    year = itemYear;
-}
-
-bool Date::setDate(int iyear, int imonth, int iday) {
-    {
-        bool validDate=Date::dateValidation(iyear,imonth,iday);
-        if(!validDate){
-            return false;
-        } else {
-            setYear(iyear);
-            setMonth(imonth);
-            setDay(iday);
-            return true;
-        }
-    }
+int Date::getDay() const {
+    return day;
 }
