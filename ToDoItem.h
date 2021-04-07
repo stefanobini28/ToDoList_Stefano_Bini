@@ -14,25 +14,17 @@ using namespace std;
 
 class ToDoItem{
 public:
-    ToDoItem();
     ToDoItem(string itemName, string description, bool done);
     ~ToDoItem();
 
-    void setName(string itemName) {
-        name= std::move(itemName);
-    }
     string getName() const{
         return name;
     }
-    void setDescription(string itemDescription) {
-        description= std::move(itemDescription);
-    }
+
     string getDescription() const {
         return description;
     }
-    void setItemDone(bool itemDone){
-        done= itemDone;
-    }
+
     bool getItemDone() const {
         return done;
     }
