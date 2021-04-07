@@ -2,15 +2,11 @@
 // Created by Stefano on 02/02/2021.
 //
 
-#include "Map.h"
+#include "ToDoList.h"
 
 using namespace std;
 
-Map::Map() = default;
-
-Map::~Map() = default;
-
-void Map::showMap() const {
+void ToDoList::showMap() const {
     if(todomap.empty()){
         cout<<"sorry, list is actually empty"<<endl;
     }
@@ -30,40 +26,34 @@ void Map::showMap() const {
     }
 }
 
-void Map::addItem(const string& name,int day,int month, int year, const string& description, bool done) {
-    date.setDate(year,month,day);
-    string strdate=date.printDate();
-
-    item.setName(name);
-    item.setDescription(description);
-    item.setItemDone(done);
-
-    if (todomap.empty()) {
-        iterator = todomap.insert(pair<string, ToDoItem>{strdate, ToDoItem{item.getName(), item.getDescription(), item.getItemDone()}});
-    } else{
-        todomap.insert(iterator,pair<string, ToDoItem>{strdate, ToDoItem{item.getName(), item.getDescription(), item.getItemDone()}});
-    }
+void ToDoList::addItem(const string& name, int day, int month, int year, const string& description, bool done) {
+    string strdate;
+    try {
+        strdate=Date(year,month,day).printDate();
+    } catch (exception& alert) {
+        cerr << alert.what() << endl;
+        throw invalid_argument("Wrong value insert");
+        return;
+    };
+    todomap.insert(pair<string, ToDoItem>{strdate, ToDoItem{name,description,done}});
 }
 
-bool Map::deleteElement(const string& deleteName) {
-    bool success = false;
+bool ToDoList::deleteElement(const string& deleteName) {
     if (todomap.empty()) {
         cout << "The map is empty!" << endl;
-        multimap<string,ToDoItem>::iterator it;
     } else {
         for(auto it=todomap.begin();it!=todomap.end();it++){
             if(it->second.getName() == deleteName){
                 todomap.erase(it);
-                success = true;
-                return success;
+                return true;
             }
         }
     }
-    return success;
+    return false;
 }
 
-bool Map::checkItem(const string& checkName) {
-    bool success = false, done, first;
+bool ToDoList::checkItem(const string& checkName) {
+    bool done;
     int i = 0;
     string strdate, name, desc, result, array[3], delimiter = "/";
     if (todomap.empty()) {
@@ -88,33 +78,20 @@ bool Map::checkItem(const string& checkName) {
                     } else
                         done = false;
 
-                    if (it==todomap.begin()){
-                        first =true;
-                    }else
-                        first = false;
                     todomap.erase(it);
 
-                    date.setDate(stoi(array[0]), std::stoi(array[1]), std::stoi(array[2]));
-                    strdate=date.printDate();
+                    Date(stoi(array[0]),stoi(array[1]),stoi(array[2]));
+                    strdate=Date(stoi(array[0]),stoi(array[1]),stoi(array[2])).printDate();
 
-                    item.setName(name);
-                    item.setDescription(desc);
-                    item.setItemDone(done);
-
-                    if (todomap.empty() || first) {
-                        iterator = todomap.insert(pair<string, ToDoItem>{strdate, ToDoItem{item.getName(), item.getDescription(), item.getItemDone()}});
-                    } else{
-                        todomap.insert(iterator,pair<string, ToDoItem>{strdate, ToDoItem{item.getName(), item.getDescription(), item.getItemDone()}});
-                    }
-                    success = true;
-                    return success;
+                    todomap.insert(pair<string, ToDoItem>{strdate, ToDoItem{name,desc,done}});
+                    return true;
                 }
             }
         }
-    return success;
+    return false;
 }
 
-void Map::writeOnFile() const {
+void ToDoList::writeOnFile() const {
     string done;
     ofstream writeFile;
     writeFile.open("ToDoList.txt");
@@ -136,7 +113,7 @@ void Map::writeOnFile() const {
     writeFile.close();
 }
 
-void Map::readFromFile(){
+void ToDoList::readFromFile(){
     string strdate,strdone;
     bool newdone;
     ifstream file("ToDoList.txt");
@@ -203,8 +180,10 @@ void Map::readFromFile(){
                 desc.append(space);
                 n++;
             }
-            desc.pop_back();
-            //aggiunta dell'elemento nella lista locale
+            desc.pop_back(); //aggiunta dell'elemento nella lista locale
+
+            Date(stoi(array[0]),stoi(array[1]),stoi(array[2]));
+
             addItem(name,std::stoi(array[2]),std::stoi(array[1]),std::stoi(array[0]),desc,newdone);
         }
     }
