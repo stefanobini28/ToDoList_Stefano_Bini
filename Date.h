@@ -10,27 +10,31 @@
 #include <utility>
 #include <vector>
 #include <iostream>
+#include <stdexcept>
 #include <sstream>
+#include <exception>
 
 using namespace std;
 
 class Date
 {
 public:
-    Date();
+    Date(int Year, int Month, int Day);
 
     string printDate() const;
     static bool dateValidation(int Year, int Month, int Day);
 
-    void setDay(int itemDay);
-    void setMonth(int itemMonth);
+    void setDay(int itemYear, int itemMonth, int itemDay);
+    void setMonth(int itemYear, int itemMonth);
     void setYear(int itemYear);
 
-    bool setDate(int year, int month, int day);
+    int getYear() const;
+    int getMonth() const;
+    int getDay() const;
 
 private:
-    int year;
-    int month;
-    int day;
+    int year{};
+    int month{};
+    int day{};
 };
 #endif //EXAMPLETXTTOMAP_DATE_H
