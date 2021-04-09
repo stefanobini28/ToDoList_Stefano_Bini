@@ -1,16 +1,15 @@
 cmake_minimum_required(VERSION 3.17)
-project(ExampleTxtToMap___Backup)
 set(CMAKE_CXX_STANDARD 14)
 
-add_subdirectory(lib)
+project(Google_tests)
 
-set(SOURCE_FILES ToDoItem.h ToDoItem.cpp ToDoList.txt ToDoList.cpp ToDoList.h Date.h Date.cpp)
-set(LIBRARIES gtest pthread)
-add_library(core ${SOURCE_FILES})
+include_directories(${GTEST_INCLUDE_DIRS})
+find_package(GTest REQUIRED)
 
-find_package(Curses REQUIRED)
-include_directories(${CURSES_INCLUDE_DIR})
-add_executable(ExampleTxtToMap___Backup main.cpp)
-target_link_libraries(ExampleTxtToMap___Backup ${CURSES_LIBRARIES})
-target_link_libraries(ExampleTxtToMap___Backup gtest)
-target_link_libraries(ExampleTxtToMap___Backup core)
+
+set(CMAKE_CXX_FLAGS -pthread)
+set(CMAKE_INCLUDE_PATH /usr/local/include)
+set(SOURCE_FILES RunAllTests.cpp test1.cpp)
+add_executable(Google_Tests ${SOURCE_FILES})
+target_link_libraries(Google_Tests gtest gtest_main)
+target_link_libraries(Google_Tests ${GTEST_BOTH_LIBRARIES} core)
