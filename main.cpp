@@ -58,7 +58,8 @@ int main() {
     int year = 0, month = 0, day = 0;
     char nome[20], desc[100];
     bool execute = true, success, validDate;
-    string name, deleteName, checkName, description;
+    string name, deleteName, checkName, description, list, delimiter= " /n",token;
+    int pos;
     ToDoList newMap;
 
     cout << "Welcome to To-Do list program!" << endl;
@@ -72,7 +73,14 @@ int main() {
 
         switch (action) {
             case 1:
-                newMap.showMap(); //mostra la lista aggiornata degli eventi
+               list=newMap.showMap(); //mostra la lista aggiornata degli eventi
+                cout<<"List elements are the following:"<<endl;
+
+                while ((pos = list.find(delimiter)) != std::string::npos) {  //suddivido la data nelle sue 3 componenti
+                    token = list.substr(0, list.find(delimiter));
+                    list.erase(0, pos + delimiter.length());
+                    cout << token << endl;
+                }
                 break;
             case 2:
                 validDate = false;
