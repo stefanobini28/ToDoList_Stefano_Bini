@@ -1,3 +1,11 @@
+//
+// Created by Stefano on 02/02/2021.
+//
+
+#ifndef EXAMPLETXTTOMAP_TODOLIST_H
+#define EXAMPLETXTTOMAP_TODOLIST_H
+
+#pragma once
 #include <iostream>
 #include <map>
 #include <algorithm>
@@ -15,7 +23,7 @@ using namespace std;
 class ToDoList {
 public:
 
-    void showMap() const ;
+    string showMap() const;
     void addItem (const string& name, int day, int month, int year, const string& description, bool done);
     bool deleteElement(const string &deleteName);
     bool checkItem(const string& checkName);
