@@ -6,24 +6,28 @@
 
 using namespace std;
 
-void ToDoList::showMap() const {
+string ToDoList::showMap() const {
+    string list;
     if(todomap.empty()){
         cout<<"sorry, list is actually empty"<<endl;
     }
     else{
         int num=1;
         string done;
-        cout<<"List elements are the following:"<<endl;
         for(const auto & it : todomap) {
             if(it.second.getItemDone() == 0) //controllo per trasformare i valori 0\1 in false\true
                 done="False";
             else
                 done="True";
 
-            cout << num << ") " << it.first<< " | Name: " << it.second.getName()<< " | Description: "<< it.second.getDescription() << " | Done: "<< done << endl;
+            stringstream ss;
+            ss << num;
+            list += ss.str();
+            list+= ") " + it.first + " | Name: " + it.second.getName() + " | Description: " + it.second.getDescription() + " | Done: " + done + " /n";
             num++;
         }
     }
+    return list;
 }
 
 void ToDoList::addItem(const string& name, int day, int month, int year, const string& description, bool done) {
@@ -33,15 +37,12 @@ void ToDoList::addItem(const string& name, int day, int month, int year, const s
     } catch (exception& alert) {
         cerr << alert.what() << endl;
         throw invalid_argument("Wrong value insert");
-        return;
     };
     todomap.insert(pair<string, ToDoItem>{strdate, ToDoItem{name,description,done}});
 }
 
 bool ToDoList::deleteElement(const string& deleteName) {
-    if (todomap.empty()) {
-        cout << "The map is empty!" << endl;
-    } else {
+    if (!todomap.empty()) {
         for(auto it=todomap.begin();it!=todomap.end();it++){
             if(it->second.getName() == deleteName){
                 todomap.erase(it);
@@ -56,38 +57,36 @@ bool ToDoList::checkItem(const string& checkName) {
     bool done;
     int i = 0;
     string strdate, name, desc, result, array[3], delimiter = "/";
-    if (todomap.empty()) {
-        cout << "The map is empty!" << endl;
-    } else {
+    if (!todomap.empty()) {
         for(auto it=todomap.begin();it!=todomap.end();it++){
-                if (it->second.getName() == checkName) {
-                    strdate = it->first;
+            if (it->second.getName() == checkName) {
+                strdate = it->first;
 
-                    size_t pos;
-                    while ((pos = strdate.find(delimiter)) != std::string::npos) {
-                        array[i] = strdate.substr(0, pos);
-                        i++;
-                        strdate.erase(0, pos + delimiter.length());
-                    }
+                size_t pos;
+                while ((pos = strdate.find(delimiter)) != std::string::npos) {
                     array[i] = strdate.substr(0, pos);
-
-                    name = it->second.getName();
-                    desc = it->second.getDescription();
-                    if (it->second.getItemDone() == 0) {
-                        done = true;
-                    } else
-                        done = false;
-
-                    todomap.erase(it);
-
-                    Date(stoi(array[0]),stoi(array[1]),stoi(array[2]));
-                    strdate=Date(stoi(array[0]),stoi(array[1]),stoi(array[2])).printDate();
-
-                    todomap.insert(pair<string, ToDoItem>{strdate, ToDoItem{name,desc,done}});
-                    return true;
+                    i++;
+                    strdate.erase(0, pos + delimiter.length());
                 }
+                array[i] = strdate.substr(0, pos);
+
+                name = it->second.getName();
+                desc = it->second.getDescription();
+                if (it->second.getItemDone() == 0) {
+                    done = true;
+                } else
+                    done = false;
+
+                todomap.erase(it);
+
+                Date(stoi(array[0]),stoi(array[1]),stoi(array[2]));
+                strdate=Date(stoi(array[0]),stoi(array[1]),stoi(array[2])).printDate();
+
+                todomap.insert(pair<string, ToDoItem>{strdate, ToDoItem{name,desc,done}});
+                return true;
             }
         }
+    }
     return false;
 }
 
@@ -108,8 +107,9 @@ void ToDoList::writeOnFile() const {
             writeFile << it.second.getDescription() << endl;
         }
     }
-    else
-        cout <<"todomap empty";
+    else{
+        writeFile << " "; //cancel all previous list items that aren't in list anymore
+    }
     writeFile.close();
 }
 
